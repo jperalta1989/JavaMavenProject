@@ -1,0 +1,18 @@
+BODY {margin: 0;padding: 0;font-family: "proxima-nova", sans-serif;}
+.table-container {position: relative;width: 900px;height: 500px;margin: 40px auto;}
+.table-container .table-top {display: block;position: absolute;top: 30px;left: 30px;width: 840px;height: 440px;margin: 0 auto;Z-INDEX: 10;}
+.table-container .table-top:before,.table-container .table-top:after{content: "";background: #136c15;width: 440px;height: 440px;border-radius: 250px;position: absolute;top: 0;}
+.table-container .table-top:before{left: 0;}
+.table-container .table-top:after{right: 0;}
+.table-container .table-top .center-table {display: block;width: 400px;height: 440px;margin: 0 auto;background: #136c15;}
+.table-container .table-border {display: block;width: 900px;height: 500px;margin: 0 auto;z-index: 1;}
+.table-container .table-border:before,.table-container .table-border:after {content: "";width: 500px;height: 500px;background: black;border-radius: 250px;position: absolute;top: 0;}
+.table-container .table-border:before {left:0;}
+.table-container .table-border:after {right:0;}
+.table-container .table-border .center-border {display: block;width: 400px;height: 500px;margin: 0 auto;background: black;}
+.player-action-container {display: block;padding: 25px 50px;background: #f3f4f6;margin: 0 auto;text-align: center;border-top: solid 1px #cacaca;}
+.player-action-container h2 {font-size: 28px;font-weight: 400;}
+.player-action-container h2:after {content: "";display: block;border-bottom: solid 1px #444;width: 120px;margin: 7px auto 0 auto;}
+.player-action-container h3 {font-weight: normal;font-size: 18px;}
+.button-container {display: flex;justify-content: space-around;margin: 30px auto;max-width: 700px;}
+.button {background: #414c5c;padding: 10px 15px;border-radius: 5px;color: #fff;cursor: pointer;}
