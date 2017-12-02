@@ -1,4 +1,4 @@
-package texasholdem;
+package texasholdem.model;
 
 /**
  * Created by Ethan on 9/27/2017.

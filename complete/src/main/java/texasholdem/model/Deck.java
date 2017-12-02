@@ -1,4 +1,4 @@
-package texasholdem;
+package texasholdem.model;
 
 import java.util.Collections;
 import java.util.Stack;

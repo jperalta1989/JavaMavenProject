@@ -1,4 +1,4 @@
-package texasholdem;
+package texasholdem.model;
 
 import java.util.ArrayList;
 import java.util.Stack;
