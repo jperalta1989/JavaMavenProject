@@ -180,17 +180,14 @@ public class Table {
         // keep track of winner(s)
         List<Player> winners = new ArrayList<>();
 
-        // get first active player and mark him/her as winner
-        for (int i = 0; i < players.size(); i++){
-            if (!players.get(i).getIsFolded()){
-                winners.add(players.get(i));
-                break;
-            }
-        }
-
         // find out who won
         for (int i = 0; i < players.size(); i++){
             if (!players.get(i).getIsFolded()) {
+                // mark first player found as winner, then compare next player with this one
+                if (winners.size() < 1) {
+                    winners.add(players.get(i));
+                    continue;
+                }
                 int comparedHandsValue = winners.get(0).compareHandTo(players.get(i));
                 if (comparedHandsValue < 0){
                     winners = new ArrayList<>();
