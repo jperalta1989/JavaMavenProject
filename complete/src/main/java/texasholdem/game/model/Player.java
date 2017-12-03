@@ -1,4 +1,4 @@
-package texasholdem.model;
+package texasholdem.game.model;
 
 import java.util.*;
 
@@ -17,6 +17,7 @@ public class Player {
     private boolean isFolded;
     private Scanner scanner;
     private String action;
+    private HandValue handValue;
 
     Player(String username) {
         this.username = username;
@@ -113,6 +114,13 @@ public class Player {
 
         return amount;
     }
+    
+    public int jam() {		
+    	System.out.println(getUserName() + " decided to thorw all his/her money in!");
+    	action = "J";
+    	
+    	return bet(balance);
+    }
 
     public int getPlayerBetValue(int amountToCall) {
         System.out.println("Possible Actions:");
@@ -129,10 +137,29 @@ public class Player {
                 return call(amountToCall);
             case "R":
                 return raise();
+            case "J":
+            	return jam();
             default:
                 System.out.println("Incorrect action, try again...");
                 return getPlayerBetValue(amountToCall);
         }
+    }
+
+    public void collectPot(int moneyWon){
+        if (moneyWon < 0)
+            throw new IllegalArgumentException("ERROR: MONEY WON IS A NEGATIVE VALUE");
+        balance += moneyWon;
+    }
+
+    public void evaluateHand(List<Card> communityCards){
+        handValue = new HandValue(communityCards, holeCards);
+    }
+
+    // if this is greater than other, should return positive
+    // if this is less than other, should return negative
+    // if this is equal to other, should return 0
+    public int compareHandTo(Player other){
+        return this.handValue.compareTo(other.handValue);
     }
 
     private String printPossibleActions(int amountToCall) {
@@ -147,7 +174,7 @@ public class Player {
         }
 
         System.out.println("(R)aise");
-
+        System.out.println("(J)am");
         System.out.println("(F)old");
 
         return possibleActions;
@@ -171,6 +198,9 @@ public class Player {
         }
 
         playerInfo.append("\n");
+
+        if (handValue != null)
+            playerInfo.append(handValue).append("\n");
 
         return playerInfo.toString();
     }

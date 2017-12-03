@@ -1,4 +1,4 @@
-package texasholdem.model;
+package texasholdem.game.model;
 
 /**
  * Created by Ethan on 9/27/2017.

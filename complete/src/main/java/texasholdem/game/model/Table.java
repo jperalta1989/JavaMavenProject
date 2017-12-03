@@ -1,4 +1,4 @@
-package texasholdem.model;
+package texasholdem.game.model;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -9,7 +9,20 @@ import java.util.List;
  */
 public class Table {
     enum Stage {
-        PRE_FLOP, FLOP, TURN, RIVER, SHOWDOWN
+        // each number value represents number of cards that should be dealt now
+        PRE_FLOP(0), FLOP(3), TURN(1), RIVER(1), SHOWDOWN(0);
+
+        private int numberOfCardsToDeal;
+
+        // needed for giving each stage a number value
+        Stage(int numberOfCardsToDeal) {
+            this.numberOfCardsToDeal = numberOfCardsToDeal;
+        }
+
+        // Returns number of cards that should be on the table this round
+        public int getNumberOfCardsToDeal() {
+            return numberOfCardsToDeal;
+        }
     }
 
     private final int TABLE_MINIMUM_BET = 10;
@@ -70,81 +83,109 @@ public class Table {
     private void callStageMethod(Stage stage) {
         switch (stage) {
             case PRE_FLOP:
-                stagePreFlop();
+                stagePreFlop(stage);
                 break;
             case FLOP:
-                stageFlop();
+                dealingStage(stage);
                 break;
             case TURN:
-                stageTurn();
+                dealingStage(stage);
                 break;
             case RIVER:
-                stageRiver();
+                dealingStage(stage);
                 break;
             case SHOWDOWN:
                 stageShowDown();
                 break;
+            default:
+                //throw
         }
     }
 
-    private void stagePreFlop() {
-        System.out.println("Stage: Pre Flop:");
+    private void stagePreFlop(Stage stage) {
+
+        System.out.println("Stage: " + stage.toString());
         setDealerAndBlinds();
-        dealPlayersHoleCards();
+        int numberOfCardsPerPlayer = 2;
+        for (int i = 0; i < numberOfCardsPerPlayer; i++)
+            dealEachPlayerOneCard();
         requestSmallBlind();
         requestBigBlind();
         goThroughRoundOfBetting();
         System.out.println(this);
     }
 
-    private void stageFlop() {
-        System.out.println("Stage: Flop:");
-        dealToTable(3);
-        System.out.println(this);
-    }
-
-    private void stageTurn() {
-        System.out.println("Stage: Turn:");
-        dealToTable(1);
-        System.out.println(this);
-    }
-
-    private void stageRiver() {
-        System.out.println("Stage: River:");
-        dealToTable(1);
+    private void dealingStage(Stage stage) {
+        System.out.println("Stage: " + stage.toString());
+        dealToTable(stage.getNumberOfCardsToDeal());
         System.out.println(this);
     }
 
     private void stageShowDown() {
         System.out.println("Stage: Showdown:");
+
+        // evaluate each active player's hand
+        for (Player p: players) {
+            if (!p.getIsFolded())
+                p.evaluateHand(communityCards);
+        }
+
+        // keep track of winner(s)
+        List<Player> winners = new ArrayList<>();
+
+        // get first active player and mark him/her as winner
+        for (int i = 0; i < players.size(); i++){
+            if (!players.get(i).getIsFolded()){
+                winners.add(players.get(i));
+                break;
+            }
+        }
+
+        // find out who won
+        for (int i = 0; i < players.size(); i++){
+            if (!players.get(i).getIsFolded()) {
+                int comparedHandsValue = winners.get(0).compareHandTo(players.get(i));
+                if (comparedHandsValue < 0){
+                    winners = new ArrayList<>();
+                    winners.add(players.get(i));
+                }
+                else if (comparedHandsValue == 0)
+                    winners.add(players.get(i));
+            }
+        }
         System.out.println(this);
+        giveWinnersPot(winners);
+        System.out.print("Winner = ");
+        for (Player winner : winners)
+            System.out.println(winner);
     }
 
+    public void giveWinnersPot(List<Player> winners){
+        int splitPotValue = pot/winners.size();
+        int unsplitChips = pot - splitPotValue;
+
+        for (Player p : winners){
+            p.collectPot(unsplitChips);
+            pot -= unsplitChips;
+        }
+        if (unsplitChips > 0)
+            winners.get(0).collectPot(unsplitChips);
+        pot = 0;
+    }
+
+    //TODO: make this safe against miscalculation when current dealer is taken out of player list
     private void setDealerAndBlinds() {
-        dealerIndex++;
-        dealerIndex = verifyIndexNotOutOfBounds(dealerIndex);
-
-        smallBlindIndex = dealerIndex + 1;
-        smallBlindIndex = verifyIndexNotOutOfBounds(smallBlindIndex);
-
-        bigBlindIndex = smallBlindIndex + 1;
-        bigBlindIndex = verifyIndexNotOutOfBounds(bigBlindIndex);
-
-        firstToBetIndex = bigBlindIndex + 1;
-        firstToBetIndex = verifyIndexNotOutOfBounds(firstToBetIndex);
+        dealerIndex = (dealerIndex + 1) % players.size();
+        smallBlindIndex = getNextValidatedPlayerIndex(dealerIndex);
+        bigBlindIndex = getNextValidatedPlayerIndex(smallBlindIndex);
+        firstToBetIndex = getNextValidatedPlayerIndex(bigBlindIndex);
     }
 
-    private void dealPlayersHoleCards() {
-        int timesToDeal = 2;
-
+    private void dealEachPlayerOneCard() {
         System.out.println("Dealing Cards To Players...\n");
-
-        while (timesToDeal != 0) {
             for (Player player : players) {
                 player.givePlayerCard(deck.dealCard());
             }
-            timesToDeal--;
-        }
     }
 
     private void requestSmallBlind() {
@@ -166,8 +207,7 @@ public class Table {
             Player currentPlayer = players.get(currentTurnIndex);
 
             if(currentPlayer.getIsFolded()){
-                currentTurnIndex++;
-                currentTurnIndex = verifyIndexNotOutOfBounds(currentTurnIndex);
+                currentTurnIndex = getNextValidatedPlayerIndex(currentTurnIndex);
                 continue;
             }
 
@@ -184,13 +224,14 @@ public class Table {
                     amountToCall += betValue;
                     pot += betValue;
                     break;
+                case "J":
+                	pot += betValue;
                 default:
                     amountToCall += betValue;
                     break;
             }
 
-            currentTurnIndex++;
-            currentTurnIndex = verifyIndexNotOutOfBounds(currentTurnIndex);
+            currentTurnIndex = getNextValidatedPlayerIndex(currentTurnIndex);
 
             if(currentTurnIndex == firstToBetIndex && players.get(firstToBetIndex).getCurrentBet() == amountToCall){
                 continueBetting = false;
@@ -198,13 +239,8 @@ public class Table {
         }
     }
 
-    private int verifyIndexNotOutOfBounds(int index){
-        int indexLimit = players.size() - 1;
-
-        if (index > indexLimit) {
-            return 0;
-        }
-
+    private int getNextValidatedPlayerIndex(int index){
+        int newIndex = (index + 1) % players.size();
         return index;
     }
 
