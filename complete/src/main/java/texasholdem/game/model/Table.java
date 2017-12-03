@@ -256,6 +256,7 @@ public class Table {
         boolean continueBetting = true;
         int currentTurnIndex = firstToBetIndex;
         int betValue;
+        int lastPlayerToRaiseIndex = currentTurnIndex;
 
         while (continueBetting) {
             Player currentPlayer = players.get(currentTurnIndex);
@@ -277,6 +278,7 @@ public class Table {
                 case "R":
                     amountToCall += betValue;
                     pot += betValue;
+                    lastPlayerToRaiseIndex = currentTurnIndex;
                     break;
                 case "J":
                 	pot += betValue;
@@ -301,7 +303,8 @@ public class Table {
                 continueBetting = false;
             }
 
-            if(currentTurnIndex == firstToBetIndex && players.get(firstToBetIndex).getCurrentBet() == amountToCall){
+            // if its now about to be the turn of the last person to have raised, then we finished betting.
+            if(currentTurnIndex == lastPlayerToRaiseIndex){// && players.get(firstToBetIndex).getCurrentBet() == amountToCall){
                 continueBetting = false;
             }
         }
