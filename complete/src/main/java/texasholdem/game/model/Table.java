@@ -281,7 +281,7 @@ public class Table {
 
     private int getNextValidatedPlayerIndex(int index){
         int newIndex = (index + 1) % players.size();
-        return index;
+        return newIndex;
     }
 
     private void dealToTable(int numberOfCardsToDeal) {
