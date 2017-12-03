@@ -16,3 +16,27 @@ BODY {margin: 0;padding: 0;font-family: "proxima-nova", sans-serif;}
 .player-action-container h3 {font-weight: normal;font-size: 18px;}
 .button-container {display: flex;justify-content: space-around;margin: 30px auto;max-width: 700px;}
 .button {background: #414c5c;padding: 10px 15px;border-radius: 5px;color: #fff;cursor: pointer;}
+.modal-container {position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: #000000bd;z-index: 9999;display: none;}
+.modal-container .new-player-modal {position: absolute;width: 300px;height: 200px;padding: 50px;background: #fff;top: 50%;left: 50%;margin: -200px 0 0 -150px;}
+.modal-container .new-player-modal .modal-close {position: absolute;top: 20px;right: 20px;font-size: 16px;line-height: 20px;font-weight: 100;text-align: center;background: #000000;width: 20px;height: 20px;color: #fff;cursor: pointer;}
+.modal-container .new-player-modal > form > h3 {text-align: center;font-size: 22px;font-weight: 500;}
+.modal-container .new-player-modal > form > div {width: 100%;float: left;margin: 10px 0;}
+.modal-container .new-player-modal > form > div > label {float: left;}
+.modal-container .new-player-modal > form > div > input {float: right;}
+.modal-container .new-player-modal > form > .button {width: 100px;float: right;background: #414c5c;padding: 5px;color: #fff;cursor: pointer;border: solid 1px #444;text-align: center;}
+.player-container {position: absolute;width: 140px;z-index: 9999;background: url("/images/chip-bg.png");background-size: 100px;background-position: 20px 0;background-repeat: no-repeat;}
+.player-container .player-join,
+.player-container .active-player {margin-top: 70px;text-align: center;background: #000000b8;color: #fff;padding: 10px;cursor: pointer;position: relative;}
+.player-container .player-join {display: block;}
+.player-container .active-player {display: none;}
+.player-container .active-player .username {font-style: italic;padding: 5px 0;border-bottom: solid 1px #888;}
+.player-container .active-player .balance {padding: 10px 0;}
+.player-container .active-player .cards > img {width: 48px;}
+div#player1 {top: 40px;right: 40px;}
+div#player2 {bottom: 40px;right: 40px;}
+div#player3 {bottom: 40px;left: 40px;}
+div#player4 {top: 40px;left: 40px;}
+div#player1 .active-player .cards,
+div#player2 .active-player .cards {position: absolute;top: -30px;left: -110px;}
+div#player3 .active-player .cards,
+div#player4 .active-player .cards {position: absolute;top: -30px;right: -110px;}

@@ -10,7 +10,7 @@ public class Card {
      */
     enum Suit {
 
-        DIAMONDS("Diamonds", 1, '\u2666'), CLUBS("Clubs", 2, '\u2663'), HEARTS("Hearts", 3, '\u2764'), SPADES("Spades", 4, '\u2660');
+        DIAMONDS("D", 1, '\u2666'), CLUBS("C", 2, '\u2663'), HEARTS("H", 3, '\u2764'), SPADES("S", 4, '\u2660');
 
         private final String suitName;
         private final Integer suitValue;
@@ -42,6 +42,7 @@ public class Card {
     private Character suitCharacter;
     private int suitValue;
     private int value;
+    private String cardImg;
 
     /**
      * Return suitName value.
@@ -70,6 +71,13 @@ public class Card {
         return value;
     }
 
+    public String getCardImg(){
+        return cardImg;
+    }
+
+    Card(){
+
+    }
     /**
      * Card constructor.
      *
@@ -81,6 +89,7 @@ public class Card {
         this.suitValue = suit.getSuitValue();
         this.suitCharacter = suit.getSuitCharacter();
         this.value = value;
+        this.cardImg = value + suitName + ".png";
     }
 
     /*@Override

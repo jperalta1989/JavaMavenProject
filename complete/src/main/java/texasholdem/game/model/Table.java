@@ -59,6 +59,46 @@ public class Table {
         return activePlayers;
     }
 
+    public int getPot() {
+        return pot;
+    }
+
+    public Deck getDeck() {
+        return deck;
+    }
+
+    public Stack<Card> getCommunityCards() {
+        return communityCards;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public boolean isTableIsFull() {
+        return tableIsFull;
+    }
+
+    public int getDealerIndex() {
+        return dealerIndex;
+    }
+
+    public int getSmallBlindIndex() {
+        return smallBlindIndex;
+    }
+
+    public int getBigBlindIndex() {
+        return bigBlindIndex;
+    }
+
+    public int getFirstToBetIndex() {
+        return firstToBetIndex;
+    }
+
+    public int getAmountToCall() {
+        return amountToCall;
+    }
+
     public void playerJoinsGame(Player player) {
         if (!tableIsFull) {
             players.add(player);

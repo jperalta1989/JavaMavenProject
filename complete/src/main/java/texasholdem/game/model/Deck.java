@@ -14,6 +14,18 @@ public class Deck {
     private Stack<Card> deck;
     private Stack<Card> usedCards;
 
+    public static int getCardsPerSuit() {
+        return CARDS_PER_SUIT;
+    }
+
+    public Stack<Card> getDeck() {
+        return deck;
+    }
+
+    public Stack<Card> getUsedCards() {
+        return usedCards;
+    }
+
     /**
      * Deck constructor.
      * We create 2 empty stack collections.

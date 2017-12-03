@@ -19,13 +19,17 @@ public class Player {
     private String action;
     private HandValue handValue;
 
+    Player(){
+
+    }
+
     Player(String username) {
         this.username = username;
         this.balance = DEFAULT_PLAYER_BALANCE;
         init();
     }
 
-    Player(String username, int balance) {
+    public Player(String username, int balance) {
         this.username = username;
         this.balance = balance;
         init();
@@ -43,7 +47,7 @@ public class Player {
         System.out.println(this);
     }
 
-    protected int getBalance() {
+    public int getBalance() {
         return balance;
     }
 
@@ -57,6 +61,18 @@ public class Player {
 
     public boolean getIsFolded(){
         return isFolded;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public Stack<Card> getHoleCards() {
+        return holeCards;
+    }
+
+    public HandValue getHandValue() {
+        return handValue;
     }
 
     protected boolean canPlay() {
