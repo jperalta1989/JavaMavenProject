@@ -115,8 +115,12 @@ public class Table {
     }
 
     public void playMatch() {
+        activePlayers = players.size();
         for (Stage stage : Stage.values()) {
             callStageMethod(stage);
+            // if all but 1 folded
+            if (activePlayers == 1)
+                break;
         }
     }
 
@@ -152,13 +156,16 @@ public class Table {
         requestSmallBlind();
         requestBigBlind();
         goThroughRoundOfBetting();
-        System.out.println(this);
+        //System.out.println(this);
     }
 
     private void dealingStage(Stage stage) {
         System.out.println("Stage: " + stage.toString());
         dealToTable(stage.getNumberOfCardsToDeal());
-        System.out.println(this);
+        //System.out.println(this);
+        for (Card c : communityCards)
+            System.out.print(c);
+        System.out.printf("%n");
     }
 
     private void stageShowDown() {
@@ -193,11 +200,8 @@ public class Table {
                     winners.add(players.get(i));
             }
         }
-        System.out.println(this);
+        //System.out.println(this);
         giveWinnersPot(winners);
-        System.out.print("Winner = ");
-        for (Player winner : winners)
-            System.out.println(winner);
     }
 
     public void giveWinnersPot(List<Player> winners){
@@ -211,6 +215,16 @@ public class Table {
         if (unsplitChips > 0)
             winners.get(0).collectPot(unsplitChips);
         pot = 0;
+        System.out.println("Winner(s): ");
+        for (Player winner : winners)
+            System.out.println(winner);
+    }
+
+    public void giveWinnerPot(Player winner){
+        winner.collectPot(pot);
+        pot = 0;
+        System.out.println("Winner: ");
+        System.out.println(winner);
     }
 
     //TODO: make this safe against miscalculation when current dealer is taken out of player list
@@ -266,12 +280,26 @@ public class Table {
                     break;
                 case "J":
                 	pot += betValue;
+                case "F":
+                    currentPlayer.fold();
+                    activePlayers--;
+                    break;
                 default:
                     amountToCall += betValue;
                     break;
             }
 
             currentTurnIndex = getNextValidatedPlayerIndex(currentTurnIndex);
+
+            if (activePlayers == 1){
+                for (Player p : players){
+                    if (!p.getIsFolded()) {
+                        giveWinnerPot(p);
+                        break;
+                    }
+                }
+                continueBetting = false;
+            }
 
             if(currentTurnIndex == firstToBetIndex && players.get(firstToBetIndex).getCurrentBet() == amountToCall){
                 continueBetting = false;
