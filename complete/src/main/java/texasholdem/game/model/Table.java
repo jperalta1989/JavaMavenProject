@@ -206,14 +206,13 @@ public class Table {
 
     public void giveWinnersPot(List<Player> winners){
         int splitPotValue = pot/winners.size();
-        int unsplitChips = pot - splitPotValue;
 
         for (Player p : winners){
-            p.collectPot(unsplitChips);
-            pot -= unsplitChips;
+            p.collectPot(splitPotValue);
+            pot -= splitPotValue;
         }
-        if (unsplitChips > 0)
-            winners.get(0).collectPot(unsplitChips);
+        if (pot > 0)
+            winners.get(0).collectPot(pot);
         pot = 0;
         System.out.println("Winner(s): ");
         for (Player winner : winners)
