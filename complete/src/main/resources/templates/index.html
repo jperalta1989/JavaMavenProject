@@ -8,11 +8,13 @@
     <link rel="stylesheet" type="text/css" href="../static/css/fonts.css" th:href="@{/css/fonts.css}"/>
     <script th:inline="javascript">
         var tableJson = [[${tableJson}]];
+        var tableJsonDecoded = JSON.parse(tableJson);
     </script>
     <script type="text/javascript" src="../static/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
 </head>
 <body>
 <div class="table-container">
+    <div class="pot">POT: $<span>0</span></div>
     <div id="start-game" class="disabled">Start Game</div>
     <div class="table-top">
         <div class="center-table"></div>
@@ -21,58 +23,65 @@
         <div class="center-border"></div>
     </div>
     
-    <div id="player1" class="player-container .available">
+    <div id="player1" class="player-container available" data-index="">
         <div class="player-join">
             Join Game
         </div>
         <div class="active-player">
             <div class="username"></div>
             <div class="balance"></div>
+            <div class="current-bet">Current Bet: $<span></span></div>
             <div class="cards">
                 <img class="left-card" src="../static/images/red-back.png" th:src="@{/images/red-back.png}">
                 <img class="right-card" src="../static/images/red-back.png" th:src="@{/images/red-back.png}">
             </div>
         </div>
     </div>
-    <div id="player2" class="player-container .available">
+    <div id="player2" class="player-container available" data-index="">
         <div class="player-join">
             Join Game
         </div>
         <div class="active-player">
             <div class="username"></div>
             <div class="balance"></div>
+            <div class="current-bet">Current Bet: $<span></span></div>
             <div class="cards">
                 <img class="left-card" src="../static/images/red-back.png" th:src="@{/images/red-back.png}">
                 <img class="right-card" src="../static/images/red-back.png" th:src="@{/images/red-back.png}">
             </div>
         </div>
     </div>
-    <div id="player3" class="player-container .available">
+    <div id="player3" class="player-container available" data-index="">
         <div class="player-join">
             Join Game
         </div>
         <div class="active-player">
             <div class="username"></div>
             <div class="balance"></div>
+            <div class="current-bet">Current Bet: $<span></span></div>
             <div class="cards">
                 <img class="left-card" src="../static/images/red-back.png" th:src="@{/images/red-back.png}">
                 <img class="right-card" src="../static/images/red-back.png" th:src="@{/images/red-back.png}">
             </div>
         </div>
     </div>
-    <div id="player4" class="player-container .available">
+    <div id="player4" class="player-container available" data-index="">
         <div class="player-join">
             Join Game
         </div>
         <div class="active-player">
             <div class="username"></div>
             <div class="balance"></div>
+            <div class="current-bet">Current Bet: $<span></span></div>
             <div class="cards">
                 <img class="left-card" src="../static/images/red-back.png" th:src="@{/images/red-back.png}">
                 <img class="right-card" src="../static/images/red-back.png" th:src="@{/images/red-back.png}">
             </div>
         </div>
     </div>
+    <div class="dealer-chip">DEALER</div>
+    <div class="small-blind-chip"><span>SMALL BLIND</span></div>
+    <div class="big-blind-chip"><span>BIG BLIND</span></div>
 </div>
 
 <div class="player-action-container" style="">
@@ -80,10 +89,8 @@
     <h3>Player Name</h3>
     <div class="button-container">
         <div class="button">Fold</div>
-        <div class="button">Check</div>
-        <div class="button">Call</div>
+        <div class="button">Call $<span></span></div>
         <div class="button">Bet</div>
-        <div class="button">Raise</div>
     </div>
 </div>
 

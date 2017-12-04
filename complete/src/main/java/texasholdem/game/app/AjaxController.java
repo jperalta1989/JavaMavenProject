@@ -45,4 +45,26 @@ public class AjaxController {
             return "error";
         }
     }
+
+    @RequestMapping(value = "/ajax/game/start")
+    public String gameStart(
+            Model model,
+            @RequestParam(value="tableJson", defaultValue="") String tableJson) {
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            Table table = mapper.readValue(tableJson, Table.class);
+            table.getStageMethodData("pre-flop");
+            String json = mapper.writeValueAsString(table);
+
+            return json;
+        } catch (JsonProcessingException e) {
+            model.addAttribute("error", e);
+            return "error";
+        } catch (IOException e) {
+            model.addAttribute("error", e);
+            return "error";
+        }
+    }
 }

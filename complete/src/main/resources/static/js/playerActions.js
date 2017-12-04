@@ -15,21 +15,26 @@ function modalClose(){
 }
 
 function loaderShow() {
+    $('.modal-container').show();
     $('.modal-container').css('z-index','10000');
     $('.sk-folding-cube').show();
 
 }
 function loaderHide() {
+    $('.modal-container').hide();
     $('.modal-container').css('z-index','9999');
     $('.sk-folding-cube').hide();
 }
 
+function refreshDecodedTable(){
+    tableJsonDecoded = JSON.parse(tableJson);
+}
 
-function populatePlayerData(json){
-    var table = JSON.parse(json);
-    var player = table.players[newPlayerKey];
+function populatePlayerData(){
+    refreshDecodedTable();
 
-    console.log(player);
+    var player = tableJsonDecoded.players[newPlayerKey];
+
 
     $(newPlayerId + ' .active-player .username').text(player.username);
     $(newPlayerId + ' .active-player .balance').text('$' + player.balance.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
@@ -58,7 +63,7 @@ $('#player-join-submit').click(function(){
         contentType: 'application/json; charset=utf-8',
         success: function(msg){
             tableJson = msg;
-            populatePlayerData(msg);
+            populatePlayerData();
             modalClose();
         },
         error: function(e){
@@ -72,6 +77,7 @@ $('.player-join').click(function(){
     newPlayerId = '#' + $(this).parent('.player-container').attr("id");
     $(this).parent('.player-container').removeClass('available');
     newPlayerKey++;
+    $(this).parent('.player-container').attr('data-index',newPlayerKey);
     if(newPlayerKey === 1){
         $('#start-game').removeClass('disabled');
     }
@@ -83,5 +89,57 @@ $('.modal-close').click(function(){
 
 
 $('#start-game').click(function(){
+    loaderShow();
 
+    var url = '/ajax/game/start';
+
+    var data = {
+        tableJson : tableJson
+    };
+
+    $.ajax({
+        url : url,
+        method : 'GET',
+        data : data,
+        cache:false,
+        contentType: 'application/json; charset=utf-8',
+        success: function(msg){
+            tableJson = msg;
+            runPreFlopDataPopulation();
+            modalClose();
+        },
+        error: function(e){
+            console.log(e);
+        }
+    });
 });
+function runPreFlopDataPopulation() {
+    refreshDecodedTable();
+
+    $(".player-container .active-player .cards").show();
+    $('#start-game').hide();
+
+    assignChipToPlayer(".dealer-chip", tableJsonDecoded.dealerIndex);
+    assignChipToPlayer(".small-blind-chip", tableJsonDecoded.smallBlindIndex);
+    assignChipToPlayer(".big-blind-chip", tableJsonDecoded.bigBlindIndex);
+
+    for(var i = 1; i <= tableJsonDecoded.players.length; i++){
+        $('#player' + i + ' .active-player .current-bet span').text(tableJsonDecoded.players[i-1].currentBet);
+    };
+
+    $('.current-bet').show();
+
+    $('.pot span').text(tableJsonDecoded.pot);
+}
+
+function assignChipToPlayer(chip, index) {
+    if(typeof index === "undefined"){
+        return;
+    }
+
+    var className = "player" + (index + 1);
+    console.log(className);
+    var chipContainer = $(chip);
+    chipContainer.show();
+    chipContainer.addClass(className);
+}

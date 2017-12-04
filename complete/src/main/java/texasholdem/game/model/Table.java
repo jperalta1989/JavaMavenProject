@@ -128,7 +128,7 @@ public class Table {
     private void callStageMethod(Stage stage) {
         switch (stage) {
             case PRE_FLOP:
-                stagePreFlop(stage);
+                stagePreFlop();
                 break;
             case FLOP:
                 dealingStage(stage);
@@ -147,16 +147,38 @@ public class Table {
         }
     }
 
-    private void stagePreFlop(Stage stage) {
+    public  void getStageMethodData(String stage) {
+        switch (stage) {
+            case "pre-flop":
+                stagePreFlop();
+                break;
+            case "flop":
+                dealToTable(Stage.FLOP.getNumberOfCardsToDeal());
+                break;
+            case "turn":
+                dealToTable(Stage.TURN.getNumberOfCardsToDeal());
+                break;
+            case "river":
+                dealToTable(Stage.RIVER.getNumberOfCardsToDeal());
+                break;
+            case "showdown":
+                stageShowDown();
+                break;
+            default:
+                //throw
+        }
+    }
 
-        System.out.println("Stage: " + stage.toString());
+    private void stagePreFlop() {
+
+        //System.out.println("Stage: " + stage.toString());
         setDealerAndBlinds();
         int numberOfCardsPerPlayer = 2;
         for (int i = 0; i < numberOfCardsPerPlayer; i++)
             dealEachPlayerOneCard();
         requestSmallBlind();
         requestBigBlind();
-        goThroughRoundOfBetting();
+        //goThroughRoundOfBetting();
         //System.out.println(this);
     }
 
@@ -170,7 +192,7 @@ public class Table {
     }
 
     private void stageShowDown() {
-        System.out.println("Stage: Showdown:");
+        //System.out.println("Stage: Showdown:");
 
         // evaluate each active player's hand
         for (Player p: players) {
