@@ -3,9 +3,16 @@ package texasholdem.game.model;
 import java.util.*;
 
 /**
- * Created by Ethan on 11/13/2017.
+ * HandValue finds, calculates, and represents the value of a player's hand. HandValue implements Comparable, enabling
+ * a user to determine which of 2 HandValues is greater. The purpose of this is to determine which player has a winning
+ * hand.
+ * @see Card
  */
 public class HandValue implements Comparable<HandValue>{
+    /**
+     * Enum HandRankings is used to represent the different types of hands and give them a value to represent strength
+     * over each other.
+     */
 	private enum HandRankings {
 		ROYAL_FLUSH(9), STRAIGHT_FLUSH(8), FOUR_OF_A_KIND(7), FULL_HOUSE(6), FLUSH(5), STRAIGHT(4), THREE_OF_A_KIND(
 				3), TWO_PAIRS(2), PAIR(1), HIGH_CARD(0);
@@ -21,8 +28,13 @@ public class HandValue implements Comparable<HandValue>{
 		}
 	}
 
-	// first value in the list is the hand ranking value, then the high card
-	private List<Integer> handValue;
+    /**
+     * List handValue stores the data to represent the strength of this HandValue after evaluating methods were called.
+     * The first place in this list indicates value of the type of hand that was found, such as a flush. The next
+     * 1-2 places indicate the numeric value(s) for the highest card(s) within that hand. Up to 4 spaces after that
+     * are used to indicate the numeric value(s) of the kickers, if there are any.
+     */
+    private List<Integer> handValue;
 	private List<Card> holeAndCommunityCards;
 	private boolean wasEvaluated;
 	private final int ACE_LOW_VALUE = 1;
@@ -40,7 +52,12 @@ public class HandValue implements Comparable<HandValue>{
     // [0] = rank, [1] = 3 of a kind value, [2] = 1st kicker, [3] = 2nd kicker
     private final int THREE_OF_A_KIND_VALUE_LIST_SIZE= 4;
 
-
+    /**
+     * The constructor takes a Player's cards and the Table's cards, a total of 7 cards, and calculates out of 5
+     * the overall greatest possible value, or strength.
+     * @param communityCards List of a Table's community Cards
+     * @param holeCards List of a Player's Cards
+     */
 	HandValue(List<Card> communityCards, List<Card> holeCards) {
 		init();
 		holeAndCommunityCards.addAll(communityCards);
@@ -54,6 +71,11 @@ public class HandValue implements Comparable<HandValue>{
 		wasEvaluated = false;
 	}
 
+    /**
+     * This method calls other methods, each of which attempt to evaluate the cards given to the constructor, until
+     * an evaluation is made. Evaluations are stored in Integer List handValue. See its JavaDoc comment for more
+     * information.
+     */
 	private void evaluateHand() {
 
 		if (!wasEvaluated) {
@@ -87,12 +109,12 @@ public class HandValue implements Comparable<HandValue>{
 	}
 
     /**
-     * Overrider for compareTo.
-     * 
-     * Returns 0 if equal, less than 0 if this < other, or greater than 0 if this > other.
+     * Overrides Comparable's compareTo. This method will compare the calculated value, or strength, of this
+     * HandValue with the parameter's.
      *
-     * @param other to be compared with.
-     * @return int
+     * @param other HandValue to be compared with.
+     * @return return a positive int when this is greater than other, a negative int when this is less than other,
+     *         or 0 when this equals other.
      * @throws IndexOutOfBoundsException if other was assigned incorrectly and either has fewer indexes than it should,
      *         or was given the wrong hand type value.
      */
@@ -114,7 +136,7 @@ public class HandValue implements Comparable<HandValue>{
         return ret;
     }
 
-    @Override
+     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof HandValue)) return false;
@@ -127,12 +149,24 @@ public class HandValue implements Comparable<HandValue>{
         return Objects.hash(handValue);
     }
 
+    /**
+     * Using overrode equals, returns true if this is greater than other, or false if this is equal to or greater
+     * than other.
+     * @param other HandValue
+     * @return Boolean
+     */
     public boolean isGreaterThan(HandValue other){
         if (this.compareTo(other) > 0)
             return true;
         return false;
     }
 
+    /**
+     * This method finds a royal flush or straight flush if it exists. If a straight flush is found with a
+     * high of 14 (Ace), the handValue will record a royal flush. This supports aces as ones by adding cards with
+     * a value of 1 of the same suit of an ace found, then removing it after calculations finish. If the pair does
+     * not exist, the cards comprising the 3 of a kind will be restored.
+     */
 	private void findRoyalFlushOrStraightFlush() {
         // create a list that's a copy of holeAndCommunityCards.
         // in this new list, for each 14 (ace), add a card with a value of 1 of the same suit
@@ -218,6 +252,11 @@ public class HandValue implements Comparable<HandValue>{
 		}
 	}
 
+    /**
+     * This method finds a full house if it exists by calling a method that looks for a 3 of a kind, then, if it
+     * exists, records the 3 of a kind's value before removing the cards comprising the 3 of a kind, then calling a
+     * method that looks for a pair. If a pair also exists, then a full house exists.
+     */
     private void findFullHouse(){
         // a full house is essentially both a 3 of a kind and a pair.
         // therefore, check if a 3 of a kind exists, and record what value it is
@@ -314,6 +353,10 @@ public class HandValue implements Comparable<HandValue>{
 		}
 	}
 
+    /**
+     * This supports aces as ones by adding cards with a value of 1 of the same suit of an ace found, then removing
+     * it after calculations finish.
+     */
     private void findStraight() {
         // create a list that's a copy of holeAndCommunityCards.
         // in this new list, for each 14 (ace), add a card with a value of 1 of the same suit
@@ -389,7 +432,12 @@ public class HandValue implements Comparable<HandValue>{
             wasEvaluated = true;
 		}
 	}
-	
+
+    /**
+     * This method looks for a 2-pair by calling the method that looks for the single highest pair. If a pair exists,
+     * the method will record what that pair's value was, remove the pair, then look for the highest existing pair
+     * again. If another pair exists, a 2 pair was found. If no pair was found, restore the removed cards.
+     */
 	private void findTwoPairs() {
 		Collections.sort(holeAndCommunityCards, new ValueComparator());
 		/*
@@ -518,6 +566,10 @@ public class HandValue implements Comparable<HandValue>{
 		}
 	}
 
+    /**
+     * This method is called when no hand could be found. This will sort the cards by number value, then take the
+     * highest one. The next highest 4 are taken as kickers.
+     */
 	private void findHighCard() {
 		Collections.sort(holeAndCommunityCards, new ValueComparator());
 
@@ -560,6 +612,10 @@ public class HandValue implements Comparable<HandValue>{
 		return ret;
 	}
 
+    /**
+     * used for testing different scenarios and ensuring all calculations were correct.
+     * @param args String[]
+     */
 	public static void main(String[] args) {
         // test: STRAIGHT_FLUSH(with that ace correction),
 		List<Card> holeCards = new ArrayList<>();

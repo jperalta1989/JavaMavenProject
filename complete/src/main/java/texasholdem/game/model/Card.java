@@ -11,9 +11,6 @@ public class Card {
      * character symbol.
      */
     public enum Suit {
-        /**
-         *
-         */
         DIAMONDS("D", 1, '\u2666'),
         CLUBS("C", 2, '\u2663'),
         HEARTS("H", 3, '\u2764'),
