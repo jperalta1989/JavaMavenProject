@@ -48,12 +48,72 @@ public class AjaxController {
     public String gameStart(
             Model model,
             @RequestParam(value="tableJson", defaultValue="") String tableJson) {
+        return runTableStage(model, tableJson, "pre-flop");
+    }
+
+    @RequestMapping(value = "/ajax/game/flop")
+    public String gameFlop(
+            Model model,
+            @RequestParam(value="tableJson", defaultValue="") String tableJson) {
+
+        return runTableStage(model, tableJson, "flop");
+    }
+
+    @RequestMapping(value = "/ajax/game/turn")
+    public String gameTurn(
+            Model model,
+            @RequestParam(value="tableJson", defaultValue="") String tableJson) {
+
+        return runTableStage(model, tableJson, "turn");
+    }
+
+    @RequestMapping(value = "/ajax/game/river")
+    public String gameRiver(
+            Model model,
+            @RequestParam(value="tableJson", defaultValue="") String tableJson) {
+
+        return runTableStage(model, tableJson, "river");
+    }
+
+    @RequestMapping(value = "/ajax/game/showdown")
+    public String gameShowDown(
+            Model model,
+            @RequestParam(value="tableJson", defaultValue="") String tableJson) {
+
+        return runTableStage(model, tableJson, "showdown");
+    }
+
+    @RequestMapping(value = "/ajax/game/reset")
+    public String gameReset(
+            Model model,
+            @RequestParam(value="tableJson", defaultValue="") String tableJson) {
 
         ObjectMapper mapper = new ObjectMapper();
 
         try {
             Table table = mapper.readValue(tableJson, Table.class);
-            table.getStageMethodData("pre-flop");
+            table.newGame();
+            String json = mapper.writeValueAsString(table);
+
+            return json;
+        } catch (JsonProcessingException e) {
+            model.addAttribute("error", e);
+            return "error";
+        } catch (IOException e) {
+            model.addAttribute("error", e);
+            return "error";
+        }
+    }
+
+
+
+
+    private String runTableStage(Model model, String tableJson, String stage){
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            Table table = mapper.readValue(tableJson, Table.class);
+            table.getStageMethodData(stage);
             String json = mapper.writeValueAsString(table);
 
             return json;

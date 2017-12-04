@@ -52,6 +52,25 @@ public class HandValue implements Comparable<HandValue>{
     // [0] = rank, [1] = 3 of a kind value, [2] = 1st kicker, [3] = 2nd kicker
     private final int THREE_OF_A_KIND_VALUE_LIST_SIZE= 4;
 
+	public List<Integer> getHandValue() {
+		return handValue;
+	}
+
+	public List<Card> getHoleAndCommunityCards() {
+		return holeAndCommunityCards;
+	}
+
+	public boolean isWasEvaluated() {
+		return wasEvaluated;
+	}
+
+	/**
+	 * Default Constructor.
+	 */
+	HandValue(){
+
+	}
+
     /**
      * The constructor takes a Player's cards and the Table's cards, a total of 7 cards, and calculates out of 5
      * the overall greatest possible value, or strength.

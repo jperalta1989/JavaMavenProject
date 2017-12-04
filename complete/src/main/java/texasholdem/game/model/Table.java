@@ -234,16 +234,16 @@ public class Table {
         if (pot > 0)
             winners.get(0).collectPot(pot);
         pot = 0;
-        System.out.println("Winner(s): ");
-        for (Player winner : winners)
-            System.out.println(winner);
+        //System.out.println("Winner(s): ");
+        //for (Player winner : winners)
+        //    System.out.println(winner);
     }
 
     public void giveWinnerPot(Player winner){
         winner.collectPot(pot);
         pot = 0;
-        System.out.println("Winner: ");
-        System.out.println(winner);
+        //System.out.println("Winner: ");
+        //System.out.println(winner);
     }
 
     //TODO: make this safe against miscalculation when current dealer is taken out of player list
@@ -361,6 +361,16 @@ public class Table {
         while (numberOfCardsToDeal != 0) {
             communityCards.add(deck.dealCard());
             numberOfCardsToDeal--;
+        }
+    }
+
+    public void newGame(){
+        pot = 0;
+        deck.resetDeck();
+        communityCards = new Stack<>();
+
+        for (Player player : players) {
+            player.resetPlayer();
         }
     }
 

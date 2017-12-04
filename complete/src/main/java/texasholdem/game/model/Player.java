@@ -21,6 +21,7 @@ public class Player {
     private Scanner scanner;
     private String action;
     private HandValue handValue;
+    private boolean isWinner;
 
     /**
      * Default Player Constructor.
@@ -56,6 +57,7 @@ public class Player {
         isFolded = false;
         scanner = new Scanner(System.in);
         action = "";
+        isWinner = false;
     }
 
     /**
@@ -88,6 +90,14 @@ public class Player {
      */
     public boolean getIsFolded(){
         return isFolded;
+    }
+
+    /**
+     * Return boolean representing whether or not Player won.
+     * @return boolean representing whether or not Player won.
+     */
+    public boolean getIsWinner(){
+        return isWinner;
     }
 
     /**
@@ -250,6 +260,7 @@ public class Player {
         if (moneyWon < 0)
             throw new IllegalArgumentException("ERROR: MONEY WON IS A NEGATIVE VALUE");
         balance += moneyWon;
+        isWinner = true;
     }
 
     /**
@@ -303,6 +314,11 @@ public class Player {
         System.out.println("(F)old");
 
         return possibleActions;
+    }
+
+    public void resetPlayer(){
+        init();
+        handValue = null;
     }
 
     @Override
