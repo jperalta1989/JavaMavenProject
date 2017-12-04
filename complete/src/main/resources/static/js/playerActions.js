@@ -104,6 +104,7 @@ $('#start-game').click(function(){
 
     var url = '/ajax/game/start';
 
+    encodeDecodedTable();
     var data = {
         tableJson : tableJsonLocal
     };
@@ -133,6 +134,7 @@ $('#start-new-game').click(function(){
         tableJson : previousTableJsonVersion
     };
 
+    encodeDecodedTable();
     $.ajax({
         url : url,
         method : 'GET',
@@ -352,6 +354,7 @@ function runStep(url, newStep){
 
     previousTableJsonVersion = tableJsonLocal;
 
+    encodeDecodedTable();
     var data = {
         tableJson : tableJsonLocal
     };
@@ -434,4 +437,8 @@ function showWinners() {
         tableJsonDecoded.players[i].handValue = null;
         tableJsonDecoded.players[i].holeCards = [];
     }
+}
+
+function encodeDecodedTable() {
+    tableJsonLocal = JSON.stringify(tableJsonDecoded);
 }
