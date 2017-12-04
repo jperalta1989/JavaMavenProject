@@ -3,11 +3,27 @@ var newPlayerKey = -1;
 
 function modalOpen(){
     $('.modal-container').show();
+    $('.new-player-modal').show();
+
 }
 
 function modalClose(){
+    loaderHide();
     $('.modal-container').hide();
+    $('.new-player-modal').hide();
+
 }
+
+function loaderShow() {
+    $('.modal-container').css('z-index','10000');
+    $('.sk-folding-cube').show();
+
+}
+function loaderHide() {
+    $('.modal-container').css('z-index','9999');
+    $('.sk-folding-cube').hide();
+}
+
 
 function populatePlayerData(json){
     var table = JSON.parse(json);
@@ -16,7 +32,7 @@ function populatePlayerData(json){
     console.log(player);
 
     $(newPlayerId + ' .active-player .username').text(player.username);
-    $(newPlayerId + ' .active-player .balance').text(player.balance);
+    $(newPlayerId + ' .active-player .balance').text('$' + player.balance.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
 
     $(newPlayerId + ' .player-join').hide();
     $(newPlayerId + ' .active-player').show();
@@ -24,6 +40,8 @@ function populatePlayerData(json){
 }
 
 $('#player-join-submit').click(function(){
+    loaderShow();
+
     var url = $('#player-join-form').attr('action');
 
     var data = {
@@ -50,13 +68,20 @@ $('#player-join-submit').click(function(){
 });
 
 $('.player-join').click(function(){
-
-   modalOpen();
-
+    modalOpen();
     newPlayerId = '#' + $(this).parent('.player-container').attr("id");
+    $(this).parent('.player-container').removeClass('available');
     newPlayerKey++;
+    if(newPlayerKey === 1){
+        $('#start-game').removeClass('disabled');
+    }
 });
 
 $('.modal-close').click(function(){
     modalClose()
+});
+
+
+$('#start-game').click(function(){
+
 });
