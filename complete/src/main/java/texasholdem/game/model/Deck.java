@@ -26,6 +26,14 @@ public class Deck {
         this.shuffle();
     }
 
+    public Stack<Card> getDeck() {
+        return deck;
+    }
+
+    public Stack<Card> getUsedCards() {
+        return usedCards;
+    }
+
     /**
      * Initialize deck with 52 cards.
      * 13 for each suit declared in Card class.

@@ -23,6 +23,13 @@ public class Player {
     private HandValue handValue;
 
     /**
+     * Default Player Constructor.
+     */
+    Player(){
+
+    }
+
+    /**
      * This constructor takes a string for the Player's username and assigns the Player the default const balance.
      * @param username String
      */

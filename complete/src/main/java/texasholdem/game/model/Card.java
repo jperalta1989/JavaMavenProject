@@ -93,6 +93,12 @@ public class Card {
         return cardImg;
     }
 
+    /**
+     * Default Card constructor.
+     */
+    Card(){
+
+    }
 
     /**
      * Card constructor.
