@@ -3,6 +3,7 @@ var newPlayerKey = -1;
 var currentTurnIndex = -1;
 var lastPlayerToRaiseIndex = -2;
 var nextStep;
+var previousTableJsonVersion;
 
 function modalOpen(){
     $('.modal-container').show();
@@ -70,7 +71,7 @@ $('#player-join-submit').click(function(){
         url : url,
         method : 'GET',
         data : data,
-        cache:false,
+        async: false,
         success: function(msg){
             tableJson = msg;
             populatePlayerData();
@@ -111,7 +112,7 @@ $('#start-game').click(function(){
         url : url,
         method : 'GET',
         data : data,
-        cache:false,
+        async : false,
         success: function(msg){
             tableJson = msg;
             runPreFlopDataPopulation();
@@ -128,16 +129,15 @@ $('#start-new-game').click(function(){
 
     var url = '/ajax/game/reset';
 
-    tableJson.communityCards = [];
     var data = {
-        tableJson : tableJson
+        tableJson : previousTableJsonVersion
     };
 
     $.ajax({
         url : url,
         method : 'GET',
         data : data,
-        cache:false,
+        async :false,
         success: function(msg){
             tableJson = msg;
             runPreFlopDataPopulation();
@@ -233,6 +233,7 @@ function runPreFlopDataPopulation() {
 
     $(".player-container .active-player .cards").show();
     $('#start-game').hide();
+    $('#start-new-game').hide();
 
     assignChipToPlayer(".dealer-chip", tableJsonDecoded.dealerIndex);
     assignChipToPlayer(".small-blind-chip", tableJsonDecoded.smallBlindIndex);
@@ -334,6 +335,9 @@ function runNextStep(){
 
 function runStep(url, newStep){
     loaderShow();
+
+    previousTableJsonVersion = tableJson;
+
     var data = {
         tableJson : tableJson
     };
@@ -342,7 +346,7 @@ function runStep(url, newStep){
         url : url,
         method : 'GET',
         data : data,
-        cache:false,
+        async:false,
         success: function(msg){
             tableJson = msg;
             nextStep = newStep;
