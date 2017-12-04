@@ -137,11 +137,11 @@ public class Player {
     	
     	return bet(balance);
     }
-
+    /*
     public int getPlayerBetValue(int amountToCall) {
         for (Card c : holeCards)
             System.out.print(c);
-        System.out.printf("%n");
+        System.out.println("Balance: " + balance);
 
         System.out.println("Possible Actions:");
         printPossibleActions(amountToCall);
@@ -156,6 +156,7 @@ public class Player {
             case "C":
                 return call(amountToCall);
             case "R":
+                call(amountToCall);
                 return raise();
             case "J":
             	return jam();
@@ -164,7 +165,7 @@ public class Player {
                 return getPlayerBetValue(amountToCall);
         }
     }
-
+    */
     public void collectPot(int moneyWon){
         if (moneyWon < 0)
             throw new IllegalArgumentException("ERROR: MONEY WON IS A NEGATIVE VALUE");
@@ -182,7 +183,7 @@ public class Player {
         return this.handValue.compareTo(other.handValue);
     }
 
-    private String printPossibleActions(int amountToCall) {
+    public String printPossibleActions(int amountToCall) {
         String possibleActions = "";
         int difference = 0;
 

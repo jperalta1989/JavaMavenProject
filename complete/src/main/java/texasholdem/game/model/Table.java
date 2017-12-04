@@ -1,6 +1,7 @@
 package texasholdem.game.model;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.Stack;
 import java.util.List;
 
@@ -251,7 +252,7 @@ public class Table {
     private void goThroughRoundOfBetting() {
         boolean continueBetting = true;
         int currentTurnIndex = firstToBetIndex;
-        int betValue;
+        int betValue = 0;
         int lastPlayerToRaiseIndex = currentTurnIndex;
 
         while (continueBetting) {
@@ -262,30 +263,11 @@ public class Table {
                 continue;
             }
 
-            betValue = currentPlayer.getPlayerBetValue(amountToCall);
-
-            switch (currentPlayer.getAction()) {
-                case "CH":
-                    pot += betValue;
-                    break;
-                case "C":
-                    pot += betValue;
-                    break;
-                case "R":
-                    amountToCall += betValue;
-                    pot += betValue;
-                    lastPlayerToRaiseIndex = currentTurnIndex;
-                    break;
-                case "J":
-                	pot += betValue;
-                case "F":
-                    currentPlayer.fold();
-                    activePlayers--;
-                    break;
-                default:
-                    amountToCall += betValue;
-                    break;
-            }
+            for (Card c : currentPlayer.getHoleCards())
+                System.out.print(c);
+            System.out.println("Balance: " + currentPlayer.getBalance());
+            if (getAndDoActionForPlayer(currentPlayer))
+                lastPlayerToRaiseIndex = currentTurnIndex;
 
             currentTurnIndex = getNextValidatedPlayerIndex(currentTurnIndex);
 
@@ -304,6 +286,48 @@ public class Table {
                 continueBetting = false;
             }
         }
+    }
+
+    // returns true if player raised
+    private boolean getAndDoActionForPlayer(Player currentPlayer) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Possible Actions:");
+        currentPlayer.printPossibleActions(amountToCall);
+
+        boolean actionNotYetMade = true;
+        while (actionNotYetMade) {
+            actionNotYetMade = false;
+            String action = scanner.nextLine().toUpperCase();
+            int betValue;
+            switch (action) {
+                case "CH":
+                    pot += currentPlayer.check();
+                    break;
+                case "C":
+                    pot += currentPlayer.call(amountToCall);
+                    break;
+                case "R":
+                    currentPlayer.call(amountToCall);
+                    betValue = currentPlayer.raise();
+                    amountToCall += betValue;
+                    pot += betValue;
+                    return true;
+                case "J":
+                    currentPlayer.call(amountToCall);
+                    betValue = currentPlayer.jam();
+                    amountToCall += betValue;
+                    pot += betValue;
+                case "F":
+                    currentPlayer.fold();
+                    activePlayers--;
+                    break;
+                default:
+                    System.out.println("Incorrect action, try again...");
+                    actionNotYetMade = true;
+                    break;
+            }
+        }
+        return false;
     }
 
     private int getNextValidatedPlayerIndex(int index){
