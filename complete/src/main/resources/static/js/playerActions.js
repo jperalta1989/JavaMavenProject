@@ -315,7 +315,7 @@ function isBettingOver(){
         }
     }
 
-    playersHadATurn = -1;
+    playersHadATurn = 0;
     return true;
 }
 
