@@ -71,7 +71,6 @@ $('#player-join-submit').click(function(){
         method : 'GET',
         data : data,
         cache:false,
-        contentType: 'application/json; charset=utf-8',
         success: function(msg){
             tableJson = msg;
             populatePlayerData();
@@ -113,7 +112,6 @@ $('#start-game').click(function(){
         method : 'GET',
         data : data,
         cache:false,
-        contentType: 'application/json; charset=utf-8',
         success: function(msg){
             tableJson = msg;
             runPreFlopDataPopulation();
@@ -140,7 +138,6 @@ $('#start-new-game').click(function(){
         method : 'GET',
         data : data,
         cache:false,
-        contentType: 'application/json; charset=utf-8',
         success: function(msg){
             tableJson = msg;
             runPreFlopDataPopulation();
@@ -346,7 +343,6 @@ function runStep(url, newStep){
         method : 'GET',
         data : data,
         cache:false,
-        contentType: 'application/json; charset=utf-8',
         success: function(msg){
             tableJson = msg;
             nextStep = newStep;

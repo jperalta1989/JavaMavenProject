@@ -6,7 +6,7 @@ BODY {margin: 0;padding: 0;font-family: "proxima-nova", sans-serif;}
 .table-container div#start-new-game {display: block;position: absolute;width: 120px;height: 40px;text-align: center;background: #D80D0D;border: solid 1px #333;line-height: 40px;top: 25%;left: 50%;z-index: 999;color: #fff;cursor: pointer;margin-top: -20px;margin-left: -50px;}
 .table-container div#start-new-game {display:none;}
 .table-container div#start-game.disabled {cursor: not-allowed;background: #8c8c8c;opacity: .65;}
-.table-container .community-cards {display: block;position: absolute;z-index: 998;border: solid 2px #e6d19a;top: 50%;left: 50%;width: 300px;margin-top: -47px;margin-left: -150px;padding: 10px;border-radius: 5px;}
+.table-container .community-cards {display: block;position: absolute;z-index: 998;border: solid 2px #e6d19a;top: 50%;left: 50%;width: 300px;margin-top: -47px;margin-left: -159px;padding: 10px;border-radius: 5px;}
 .table-container .community-cards .cards img {width: 48px;height: 70px;}
 .table-container .community-cards .cards {display: flex;justify-content: space-around;}
 .table-container .table-top {display: block;position: absolute;top: 30px;left: 30px;width: 840px;height: 440px;margin: 0 auto;Z-INDEX: 10;}
@@ -33,9 +33,9 @@ BODY {margin: 0;padding: 0;font-family: "proxima-nova", sans-serif;}
 .table-container .player4{top:160px;left:190px}
 .player-action-container {display: none;position: absolute;padding: 10px;background: #f3f4f6;text-align: center;border-top: solid 1px #cacaca;z-index: 999;}
 .player-action-container.player1,
-.player-action-container.player2{top: 197px;right: 201px;display: block;}
+.player-action-container.player2{top: 157px;right: 190px;display: block;bottom: unset;}
 .player-action-container.player3,
-.player-action-container.player4{top: 198px;left: 201px;display: block;}
+.player-action-container.player4{top: 157px;left: 190px;display: block;bottom: unset;}
 .button-container {width: 100px;position: relative;}
 .button-container div#bet-amount-container {position: absolute;width: 163px;bottom: -10px;right: -193px;padding: 10px;background: #f3f4f6;z-index: 999;display: none;}
 .button-container div#bet-amount-container .button {width: 96px;height: 16px;padding: 5px;font-size: 12px;line-height: 16px;float: right;margin-top: 5px;margin-right: 1px;}
