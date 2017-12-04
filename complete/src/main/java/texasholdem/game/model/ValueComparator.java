@@ -12,7 +12,7 @@ public class ValueComparator implements Comparator<Card> {
      * This compares Cards by Card value alone.
      * @param a Card
      * @param b Card
-     * @return positive int when a > b, negative int when a < b, or 0 when a equals b.
+     * @return positive int when a is greater than b, negative int when a is less than b, or 0 when a equals b.
      */
 
     @Override
