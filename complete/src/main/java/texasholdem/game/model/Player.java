@@ -63,10 +63,6 @@ public class Player {
         return isFolded;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
     public Stack<Card> getHoleCards() {
         return holeCards;
     }
