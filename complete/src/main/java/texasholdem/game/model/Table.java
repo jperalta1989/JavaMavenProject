@@ -6,20 +6,52 @@ import java.util.Stack;
 import java.util.List;
 
 /**
- * Created by Ethan on 10/17/2017.
+ * Table represents a poker table with a deck of cards where players sit at. Has methods to simulate players playing a
+ * game.
  */
 public class Table {
+    /**
+     * Stage is an enum representing the current stage of the game. Each stage is assigned an int indicating
+     * how many cards need to be dealt to the table during that stage.
+     */
     enum Stage {
         // each number value represents number of cards that should be dealt now
-        PRE_FLOP(0), FLOP(3), TURN(1), RIVER(1), SHOWDOWN(0);
+        /**
+         * Given int of 0.
+         */
+        PRE_FLOP(0),
+        /**
+         * Given int of 3.
+         */
+        FLOP(3),
+        /**
+         * Given int of 1.
+         */
+        TURN(1),
+        /**
+         * Given int of 1.
+         */
+        RIVER(1),
+        /**
+         * Given int of 0.
+         */
+        SHOWDOWN(0);
 
         private int numberOfCardsToDeal;
 
+        /**
+         * Constructor for Stage.
+         * @param numberOfCardsToDeal int representing how many Cards need to be dealt to the Table.
+         */
         // needed for giving each stage a number value
         Stage(int numberOfCardsToDeal) {
             this.numberOfCardsToDeal = numberOfCardsToDeal;
         }
 
+        /**
+         * Returns int representing how many cards need to be dealt to the table during this Stage.
+         * @return int representing how many cards need to be dealt to the table during this Stage
+         */
         // Returns number of cards that should be on the table this round
         public int getNumberOfCardsToDeal() {
             return numberOfCardsToDeal;
@@ -41,6 +73,10 @@ public class Table {
     private int activePlayers;
     private int amountToCall;
 
+
+    /**
+     * Initialize values.
+     */
     public Table() {
         this.init();
     }
@@ -56,50 +92,99 @@ public class Table {
         amountToCall = 0;
     }
 
+    /**
+     * Returns count of all active players.
+     * @return count of all active players
+     */
     public int getActivePlayers() {
         return activePlayers;
     }
 
+    /**
+     * Return int representing the collective amount of money bet by all playeres in a match.
+     * @return int representing the collective amount of money bet by all playeres in a match.
+     */
     public int getPot() {
         return pot;
     }
 
+    /**
+     * Return the Table's Deck.
+     * @return the Table's Deck.
+     */
     public Deck getDeck() {
         return deck;
     }
 
+    /**
+     * Returns Stack of Cards dealt to the Table.
+     * @return Stack of Cards dealt to the Table
+     */
     public Stack<Card> getCommunityCards() {
         return communityCards;
     }
 
+    /**
+     * Returns list containing all Players seated at Table.
+     * @return list containing all Players seated at Table
+     */
     public List<Player> getPlayers() {
         return players;
     }
 
+    /**
+     * Returns true if table is full and cannot fit in another Player.
+     * @return true if table is full and cannot fit in another Player
+     */
     public boolean isTableIsFull() {
         return tableIsFull;
     }
 
+    /**
+     * Returns the index of the Player in Table's list of Players whose turn it is to deal.
+     * @return the index of the Player in Table's list of Players whose turn it is to deal
+     */
     public int getDealerIndex() {
         return dealerIndex;
     }
 
+    /**
+     * Returns the index of the Player in Table's list of Players whose turn it is to pay small blind.
+     * @return the index of the Player in Table's list of Players whose turn it is to pay small blind
+     */
     public int getSmallBlindIndex() {
         return smallBlindIndex;
     }
 
+    /**
+     * Returns the index of the Player in Table's list of Players whose turn it is to pay big blind.
+     * @return the index of the Player in Table's list of Players whose turn it is to pay big blind
+     */
     public int getBigBlindIndex() {
         return bigBlindIndex;
     }
 
+    /**
+     /**
+     * Returns the index of the Player in Table's list of Players will be the first to bet.
+     * @return the index of the Player in Table's list of Players will be the first to bet
+     */
     public int getFirstToBetIndex() {
         return firstToBetIndex;
     }
 
+    /**
+     * Returns current amount of money bet and needed to call.
+     * @return current amount of money bet and needed to call
+     */
     public int getAmountToCall() {
         return amountToCall;
     }
 
+    /**
+     * Adds a Player to the table.
+     * @param player Player to add into the Table's game.
+     */
     public void playerJoinsGame(Player player) {
         if (!tableIsFull) {
             players.add(player);
@@ -115,6 +200,11 @@ public class Table {
         System.out.println("Table is Full " + player.getUserName() + " cannot join game.\n");
     }
 
+    /**
+     * Play each round of poker, dealing cards at the appropriate times to the appropriate locations, until
+     * all but 1 players folds or all rounds have been completed, in which case each Player's hands are evaluated
+     * and compared to find who won.
+     */
     public void playMatch() {
         activePlayers = players.size();
         for (Stage stage : Stage.values()) {
@@ -125,6 +215,11 @@ public class Table {
         }
     }
 
+    /**
+     * Calls the appropriate method for the current Stage.
+     * @param stage the Stage the Table is currently in the middle of.
+     * @see Stage
+     */
     private void callStageMethod(Stage stage) {
         switch (stage) {
             case PRE_FLOP:
@@ -169,6 +264,10 @@ public class Table {
         }
     }
 
+    /**
+     * Simulates the preflop stage of poker. This includes dealing a card to each player twice, determining which players are
+     * dealer, small blind, and big blind, determining which player goes first, and collects blinds.
+     */
     private void stagePreFlop() {
 
         //System.out.println("Stage: " + stage.toString());
@@ -182,6 +281,12 @@ public class Table {
         //System.out.println(this);
     }
 
+    /**
+     * Simulates a stage of poker in which the Table is dealt a card(s). This includes dealing as many cards as
+     * appropriate for the current round to the Table. The number of cards to deal is received from Stage received.
+     * @param stage the stage the Table is currently in the middle of.
+     * @see Stage
+     */
     private void dealingStage(Stage stage) {
         System.out.println("Stage: " + stage.toString());
         dealToTable(stage.getNumberOfCardsToDeal());
@@ -191,6 +296,11 @@ public class Table {
         System.out.printf("%n");
     }
 
+    /**
+     * For each player that did not fold, evaluate Player's hand, then compare each hand and find which hand(s) are
+     * greatest. This method then awards the pot to the winner(s). If 2 or more players share the same hand, the
+     * pot is split between them.
+     */
     private void stageShowDown() {
         //System.out.println("Stage: Showdown:");
 
@@ -224,6 +334,12 @@ public class Table {
         giveWinnersPot(winners);
     }
 
+    /**
+     * Divides the pot for however many Players, representing winners, are given before distributing the winnings
+     * to each player. If the pot could not be split evenly, the first Player in the list of winners recievers the
+     * left overs (should be 1).
+     * @param winners List of Players. Used with stageShowDown, these are the Players with the highest handValue.
+     */
     public void giveWinnersPot(List<Player> winners){
         int splitPotValue = pot/winners.size();
 
@@ -239,6 +355,10 @@ public class Table {
         //    System.out.println(winner);
     }
 
+    /**
+     * Add to a Player's balance the value of the pot, then sets the pot to 0.
+     * @param winner Player who won. This should represent the last player to have not folded.
+     */
     public void giveWinnerPot(Player winner){
         winner.collectPot(pot);
         pot = 0;
@@ -364,6 +484,9 @@ public class Table {
         }
     }
 
+    /**
+     * Resets deck, sets pot to 0, clears Cards from the table, and reset each player to prepare for new game.
+     */
     public void newGame(){
         pot = 0;
         deck.resetDeck();
@@ -374,6 +497,10 @@ public class Table {
         }
     }
 
+    /**
+     * Returns string indicating the Table's data and the status of each Player.
+     * @return
+     */
     @Override
     public String toString() {
         StringBuilder tableInformation = new StringBuilder("Table Information...\n\n");
