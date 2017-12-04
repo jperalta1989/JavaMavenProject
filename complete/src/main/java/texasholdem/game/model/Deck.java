@@ -5,7 +5,9 @@ import java.util.Stack;
 
 
 /**
- * Created by Ethan on 9/27/2017.
+ * The Deck class represents a stack of 52 Cards, each unique. This class includes methods to reset the deck, shuffle
+ * the deck, and to deal a card. This class also keeps track of what was dealt out to be able to reset quickly.
+ * @see Card
  */
 public class Deck {
 
@@ -14,22 +16,8 @@ public class Deck {
     private Stack<Card> deck;
     private Stack<Card> usedCards;
 
-    public static int getCardsPerSuit() {
-        return CARDS_PER_SUIT;
-    }
-
-    public Stack<Card> getDeck() {
-        return deck;
-    }
-
-    public Stack<Card> getUsedCards() {
-        return usedCards;
-    }
-
     /**
-     * Deck constructor.
-     * We create 2 empty stack collections.
-     * We call init().
+     * Deck constructor fills the stack with 52 unique cards.
      */
     public Deck(){
         deck = new Stack<>();
@@ -51,7 +39,7 @@ public class Deck {
     }
 
     /**
-     * If used cards is empty we shuffle the deck collection.
+     * Shuffles the deck if cards are missing from the stack.
      */
     public void shuffle() {
 
@@ -63,7 +51,7 @@ public class Deck {
     }
 
     /**
-     * Reset the deck by placing used cards back into deck stack.
+     * Refills the deck by placing used cards back into deck stack.
      */
     public void resetDeck(){
         while(!usedCards.isEmpty()) {
@@ -72,7 +60,7 @@ public class Deck {
     }
 
     /**
-     * Pop card from deck collection, place it in used card collection.
+     * Pops and returns a card from the stack.
      *
      * @return Card
      */
@@ -94,6 +82,7 @@ public class Deck {
     }
 
     // Use this to test that I am initializing the deck correctly.
+    /*
     public static void main(String[] args) {
         Deck deck = new Deck();
 
@@ -110,4 +99,5 @@ public class Deck {
 
         System.out.print(deck);
     }
+    */
 }

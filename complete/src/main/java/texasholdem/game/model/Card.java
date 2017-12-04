@@ -1,16 +1,20 @@
 package texasholdem.game.model;
 
 /**
- * Created by Ethan on 9/27/2017.
+ * This class represents a playing card with a number value and a suit character symbol. This class also
+ * contains a Suit enum.
  */
 public class Card {
 
     /**
-     * Suit enum class preset with appropriate string and int values.
+     * Enum Suit represent the Suits of playing cards, with each Suit containing a name, numeric value, and
+     * character symbol.
      */
-    enum Suit {
-
-        DIAMONDS("D", 1, '\u2666'), CLUBS("C", 2, '\u2663'), HEARTS("H", 3, '\u2764'), SPADES("S", 4, '\u2660');
+    public enum Suit {
+        DIAMONDS("D", 1, '\u2666'),
+        CLUBS("C", 2, '\u2663'),
+        HEARTS("H", 3, '\u2764'),
+        SPADES("S", 4, '\u2660');
 
         private final String suitName;
         private final Integer suitValue;
@@ -22,14 +26,28 @@ public class Card {
             this.suitCharacter = suitCharacter;
         }
 
+        /**
+         * Returns a string containing the first letter of the name of the suit. This only contains the first
+         * letter for the purpose of getting and displaying the correct image in the web-app.
+         * @return a string containing the first letter of the name of the suit
+         */
         public String getSuitName() {
             return suitName;
         }
 
+        /**
+         * Returns an Integer representing the number value of the suit. This goes from 1 - 4 in the order of
+         * diamonds, clubs, hearts, spades.
+         * @return an Integer representing the number value of the suit
+         */
         public Integer getSuitValue() {
             return suitValue;
         }
 
+        /**
+         * Returns a Character for the symbol of the suit.
+         * @return a Character for the symbol of the suit
+         */
         public Character getSuitCharacter() {
             return suitCharacter;
         }
@@ -75,9 +93,7 @@ public class Card {
         return cardImg;
     }
 
-    Card(){
 
-    }
     /**
      * Card constructor.
      *
@@ -92,11 +108,12 @@ public class Card {
         this.cardImg = value + suitName + ".png";
     }
 
-    /*@Override
-    public String toString() {
-        return "The " + value + " of " + suitName + "\n";
-    }*/
-
+    /**
+     * {@inheritDoc}
+     * Returns string displaying a visual representation of the card, in the format of a pipe character, the numerical
+     * value, the suit symbol, and another pipe.
+     * @return String
+     */
     @Override
     public String toString() {
         return "| " +value + suitCharacter + " |";
