@@ -139,6 +139,10 @@ public class Player {
     }
 
     public int getPlayerBetValue(int amountToCall) {
+        for (Card c : holeCards)
+            System.out.print(c);
+        System.out.printf("%n");
+
         System.out.println("Possible Actions:");
         printPossibleActions(amountToCall);
         System.out.println(getUserName() + " what would you like to do?");
@@ -201,13 +205,14 @@ public class Player {
         StringBuilder playerInfo = new StringBuilder("username = " + username + "\n");
 
         playerInfo.append(username).append("'s Balance is $").append(getBalance()).append("\n");
-        if (canPlay()) {
-            playerInfo.append(username).append(" is still able to play.");
-        } else {
-            playerInfo.append(username).append(" is no longer able to play.");
-        }
 
-        playerInfo.append("\n").append(username).append("'s cards:");
+        String canPlayString = canPlay() ? " has enough to play.\n" : " does not have enough to play.\n";
+        playerInfo.append(username).append(canPlayString);
+
+        String foldedString = isFolded ? " has folded.\n" : " has not folded.\n";
+        playerInfo.append(username).append(foldedString);
+
+        playerInfo.append(username).append("'s cards:");
 
         for (Card card : holeCards) {
             playerInfo.append(card.toString());

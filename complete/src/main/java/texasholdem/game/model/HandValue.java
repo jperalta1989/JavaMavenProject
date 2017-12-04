@@ -142,8 +142,9 @@ public class HandValue implements Comparable<HandValue>{
 
         for (int i = 0; i < aceSupported.size(); i++){
             Card currentCard = aceSupported.get(i);
-            if (currentCard.getValue() == ACE_HIGH_VALUE)
-                aceSupported.add(new Card(Card.Suit.valueOf(currentCard.getSuitName().toUpperCase()), ACE_LOW_VALUE));
+            if (currentCard.getValue() == ACE_HIGH_VALUE) {
+				aceSupported.add(new Card(Card.Suit.values()[currentCard.getSuitValue() - 1], ACE_LOW_VALUE));
+			}
         }
 
 
@@ -323,7 +324,7 @@ public class HandValue implements Comparable<HandValue>{
         for (int i = 0; i < aceSupported.size(); i++){
             Card currentCard = aceSupported.get(i);
             if (currentCard.getValue() == ACE_HIGH_VALUE)
-                aceSupported.add(new Card(Card.Suit.valueOf(currentCard.getSuitName().toUpperCase()), ACE_LOW_VALUE));
+                aceSupported.add(new Card(Card.Suit.values()[currentCard.getSuitValue() - 1], ACE_LOW_VALUE));
         }
         Collections.sort(aceSupported, new ValueComparator());
         int highValue = aceSupported.get(0).getValue();
@@ -566,10 +567,10 @@ public class HandValue implements Comparable<HandValue>{
 		holeCards.add(new Card(Card.Suit.CLUBS, 8));
 
 		List<Card> communityCards = new ArrayList<>();
-		communityCards.add(new Card(Card.Suit.DIAMONDS, 2));
+		communityCards.add(new Card(Card.Suit.CLUBS, 2));
 		communityCards.add(new Card(Card.Suit.DIAMONDS, 3));
 		communityCards.add(new Card(Card.Suit.DIAMONDS, 4));
-		communityCards.add(new Card(Card.Suit.CLUBS, 13));
+		communityCards.add(new Card(Card.Suit.DIAMONDS, 5));
 		communityCards.add(new Card(Card.Suit.DIAMONDS, 14));
 
 		HandValue hv = new HandValue(holeCards, communityCards);
