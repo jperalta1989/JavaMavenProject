@@ -7,9 +7,9 @@
     <link rel="stylesheet" type="text/css" href="../static/css/fontawesome.min.css" th:href="@{/css/fontawesome.min.css}"/>
     <link rel="stylesheet" type="text/css" href="../static/css/fonts.css" th:href="@{/css/fonts.css}"/>
     <script th:inline="javascript">
-        var tableJson = [[${tableJson}]];
+        var tableJsonLocal = [[${tableJson}]];
         var cardBackSrc = "/images/red-back.png";
-        var tableJsonDecoded = JSON.parse(tableJson);
+        var tableJsonDecoded = JSON.parse(tableJsonLocal);
     </script>
     <script type="text/javascript" src="../static/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
 </head>

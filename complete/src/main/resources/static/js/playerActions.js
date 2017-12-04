@@ -1,9 +1,9 @@
 var newPlayerId;
 var newPlayerKey = -1;
 var currentTurnIndex = -1;
-var lastPlayerToRaiseIndex = -2;
 var nextStep;
 var previousTableJsonVersion;
+var playersHadATurn = -1;
 
 function modalOpen(){
     $('.modal-container').show();
@@ -39,7 +39,7 @@ function nextPlayerTurnHide(){
 }
 
 function refreshDecodedTable(){
-    tableJsonDecoded = JSON.parse(tableJson);
+    tableJsonDecoded = JSON.parse(tableJsonLocal);
 }
 
 function populatePlayerData(){
@@ -64,7 +64,7 @@ $('#player-join-submit').click(function(){
     var data = {
         username : $('#player-join-form #username').val(),
         balance : $('#player-join-form #balance').val(),
-        tableJson : tableJson
+        tableJson : tableJsonLocal
     };
 
     $.ajax({
@@ -73,7 +73,7 @@ $('#player-join-submit').click(function(){
         data : data,
         async: false,
         success: function(msg){
-            tableJson = msg;
+            tableJsonLocal = msg;
             populatePlayerData();
             modalClose();
         },
@@ -105,7 +105,7 @@ $('#start-game').click(function(){
     var url = '/ajax/game/start';
 
     var data = {
-        tableJson : tableJson
+        tableJson : tableJsonLocal
     };
 
     $.ajax({
@@ -114,7 +114,7 @@ $('#start-game').click(function(){
         data : data,
         async : false,
         success: function(msg){
-            tableJson = msg;
+            tableJsonLocal = msg;
             runPreFlopDataPopulation();
             loaderHide();
         },
@@ -139,7 +139,7 @@ $('#start-new-game').click(function(){
         data : data,
         async :false,
         success: function(msg){
-            tableJson = msg;
+            tableJsonLocal = msg;
             runPreFlopDataPopulation();
             loaderHide();
         },
@@ -153,6 +153,11 @@ $('#start-new-game').click(function(){
 $('.next-player-turn .button').click(function(){
     var currentPlayer = getCurrentBetter();
 
+    if(currentPlayer.isFolded){
+        currentTurnIndex = getNextValidatedPlayerIndex(currentTurnIndex);
+        displayCurrentPlayerContinueModal();
+    }
+
     if (currentPlayer.currentBet == tableJsonDecoded.amountToCall){
         $('#check').show();
         $('#call').hide();
@@ -160,6 +165,9 @@ $('.next-player-turn .button').click(function(){
         $('#call').show();
         $('#check').hide();
     }
+
+    var callDiference = tableJsonDecoded.amountToCall - currentPlayer.betAmount;
+    $('#call span').text(callDiference);
 
     nextPlayerTurnHide();
 
@@ -193,7 +201,7 @@ $('#call').click(function(){
         $('#player' + playerHtmlIndex + ' .active-player .balance').text(tableJsonDecoded.players[currentTurnIndex].balance);
 
 
-        tableJsonDecoded.pot = tableJsonDecoded.pot + tableJsonDecoded.amountToCall;
+        tableJsonDecoded.pot = tableJsonDecoded.pot + callDifference;
         updatePot();
     }
 
@@ -223,7 +231,6 @@ $('#bet-amount-container .button').click(function(){
     tableJsonDecoded.pot = tableJsonDecoded.pot + betAmount;
     updatePot();
     tableJsonDecoded.amountToCall = tableJsonDecoded.amountToCall + betAmount;
-    lastPlayerToRaiseIndex = currentTurnIndex;
     currentTurnIndex = getNextValidatedPlayerIndex(currentTurnIndex);
     displayCurrentPlayerContinueModal();
 });
@@ -273,15 +280,15 @@ function updatePot(){
 function displayCurrentPlayerContinueModal(){
     if(isBettingOver()){
         runNextStep();
-        return;
+    } else{
+        resetActionContainer();
+        $('#bet-amount-container').hide();
+        $(".active-player .cards img").attr('src', cardBackSrc);
+        var currentBetter = getCurrentBetter();
+        $('.next-player-turn h1').text(currentBetter.username);
+        nextPlayerTurnShow();
     }
 
-    resetActionContainer();
-    $('#bet-amount-container').hide();
-    $(".active-player .cards img").attr('src', cardBackSrc);
-    var currentBetter = getCurrentBetter();
-    $('.next-player-turn h1').text(currentBetter.username);
-    nextPlayerTurnShow();
 }
 
 function resetActionContainer(){
@@ -294,12 +301,19 @@ function resetActionContainer(){
 }
 
 function isBettingOver(){
+    playersHadATurn++;
+
+    if(playersHadATurn < tableJsonDecoded.activePlayers){
+        return false;
+    }
+
     for (var i = 0; i < tableJsonDecoded.players.length; i++) {
         if(tableJsonDecoded.players[i].currentBet != tableJsonDecoded.amountToCall){
             return false;
         }
     }
 
+    playersHadATurn = -1;
     return true;
 }
 
@@ -336,10 +350,10 @@ function runNextStep(){
 function runStep(url, newStep){
     loaderShow();
 
-    previousTableJsonVersion = tableJson;
+    previousTableJsonVersion = tableJsonLocal;
 
     var data = {
-        tableJson : tableJson
+        tableJson : tableJsonLocal
     };
 
     $.ajax({
@@ -348,7 +362,7 @@ function runStep(url, newStep){
         data : data,
         async:false,
         success: function(msg){
-            tableJson = msg;
+            tableJsonLocal = msg;
             nextStep = newStep;
             placeCommunityCardsOnTable();
             loaderHide();
@@ -362,22 +376,22 @@ function runStep(url, newStep){
 function placeCommunityCardsOnTable() {
     if (nextStep == 'complete'){
         endGame();
-        return;
+    } else{
+
+        var imgSrc;
+
+        refreshDecodedTable();
+        resetActionContainer();
+        $('#bet-amount-container').hide();
+        $(".active-player .cards img").attr('src', cardBackSrc);
+
+        for(var i = 1; i <= tableJsonDecoded.communityCards.length; i++){
+            imgSrc = '/images/' + tableJsonDecoded.communityCards[i - 1].cardImg;
+            $('.community-cards #card' + i).attr('src', imgSrc);
+        }
+        currentTurnIndex = tableJsonDecoded.firstToBetIndex;
+        nextPlayerTurnShow();
     }
-
-    var imgSrc;
-
-    refreshDecodedTable();
-    resetActionContainer();
-    $('#bet-amount-container').hide();
-    $(".active-player .cards img").attr('src', cardBackSrc);
-
-    for(var i = 1; i <= tableJsonDecoded.communityCards.length; i++){
-        imgSrc = '/images/' + tableJsonDecoded.communityCards[i - 1].cardImg;
-        $('.community-cards #card' + i).attr('src', imgSrc);
-    }
-    currentTurnIndex = tableJsonDecoded.firstToBetIndex;
-    nextPlayerTurnShow();
 }
 
 function endGame(){
